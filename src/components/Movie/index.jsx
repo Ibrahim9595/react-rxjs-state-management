@@ -6,7 +6,7 @@ import './index.css';
  * @param {{data: Movie}} props
  */
 export const MovieComponent = ({ data }) => (
-    <div key={data.imdbID} className="movie-container">
+    <div className="movie-container">
         <h5 className="movie-year">{data.Year}</h5>
         <img
             className="movie-poster"

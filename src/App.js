@@ -3,6 +3,7 @@ import './App.css';
 import { store } from './services';
 import { Filter } from './services/core/filtrationHelper';
 import { MovieComponent } from './components/Movie';
+import { Loading } from './components/Loading';
 
 function App() {
   const [data, setData] = useState({ loading: true, data: [] });
@@ -22,12 +23,12 @@ function App() {
         <button onClick={() => store.loadNext()}>{'next >'}</button>
       </nav>}
 
-      <div className="container">
-        {data.loading ?
-          <p style={{textAlign: "center"}}>Loading...</p>
-          : data.data.map(movie => <MovieComponent key={movie.imdbpID} data={movie} />)
-        }
-      </div>
+      {data.loading ?
+        <Loading /> :
+        <div className="container">
+          {data.data.map(movie => <MovieComponent key={movie.imdbID} data={movie} />)}
+        </div>
+      }
     </div>
   );
 }
