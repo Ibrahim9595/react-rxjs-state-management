@@ -1,24 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
 import './App.css';
+import { store } from './services';
+import { Filter } from './services/core/filtrationHelper';
+import { MovieComponent } from './components/Movie';
 
 function App() {
+  const [data, setData] = useState({ loading: true, data: [] });
+  useEffect(() => {
+    store.setFilters([new Filter('contains', 'man', 'Title', 's')]);
+    let subscription = store.uiData.subscribe(d => setData(d));
+    return () => subscription.unsubscribe();
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <input placeholder="Search for a movie" className="search-box" onChange={(e) =>
+        store.setFilters([new Filter('contains', e.target.value, 'Title', 's')])} />
+
+      {!data.loading && <nav className="nav-btns-container">
+        <button onClick={() => store.loadPrevious()}> {'< previous'} </button>
+        <button onClick={() => store.loadNext()}>{'next >'}</button>
+      </nav>}
+
+      <div className="container">
+        {data.loading ?
+          <p style={{textAlign: "center"}}>Loading...</p>
+          : data.data.map(movie => <MovieComponent key={movie.imdbpID} data={movie} />)
+        }
+      </div>
     </div>
   );
 }

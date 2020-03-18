@@ -1,0 +1,25 @@
+.movie-container {
+    cursor: pointer;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: 350px;
+    margin: 10px 5px 10px 5px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    max-width: 100%;
+    overflow: auto;
+}
+
+.movie-poster {
+    width: auto;
+    height: 80%;
+    flex: 1;
+}
+
+.movie-title, .movie-year {
+    display: inline;
+    margin: 5px;
+}

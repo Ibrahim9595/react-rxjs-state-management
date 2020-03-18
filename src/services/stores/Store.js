@@ -6,7 +6,6 @@ import { Movie } from '../models/movie';
  * TODO: 
  * 1- A way to merge old data with new data
  * 2- select an element
- * 3- ui
  */
 
 export class Store {
@@ -27,7 +26,7 @@ export class Store {
      * @access private
      */
     _filters = new BehaviorSubject([]);
-    
+
     _page = 1;
 
     /**
@@ -63,8 +62,13 @@ export class Store {
         this._filters.next(filters);
     }
 
-    loadMore() {
-        this.page++;
+    loadNext() {
+        this._page++;
+        this._find(this._filters.value);
+    }
+
+    loadPrevious() {
+        this._page = this._page - 1 <= 0 ? this._page : this._page - 1;
         this._find(this._filters.value);
     }
 
@@ -76,9 +80,12 @@ export class Store {
         this._data.next({ ...this._data.value, loading: true })
         try {
             const data = await this._http.findAll(
-                [...filters.map(filter => filter.toQueryParams()), { key: 'page', val: this.page }]
+                [...filters.map(filter => filter.toQueryParams()), { key: 'page', val: this._page }]
             );
-            this._data.next({ loading: false, data: (data.Search || []).map(el => new Movie(el)) });
+            this._data.next({
+                loading: false, data: data.Search ?
+                    (data.Search || []).map(el => new Movie(el)) : this._data.value.data
+            });
         } catch (error) {
             alert(error);
         }
